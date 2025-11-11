@@ -4,16 +4,7 @@ from PIL import Image
 import numpy as np
 import io, time, json
 
-import os
-# 1) Desactivar XLA en CPU
-os.environ["TF_XLA_FLAGS"] = "--xla_cpu_use_xla=false"
-os.environ["XLA_FLAGS"] = "--xla_cpu_use_xla=false"
 
-# 2) Desactivar optimizaciones oneDNN (evita caminos de half/avx-512)
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
-
-# 3) (Opcional) Forzar que TF no use GPU si hay una medio configurada
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import tensorflow as tf
 

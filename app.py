@@ -8,12 +8,12 @@ import io, time, json
 
 import tensorflow as tf
 
-# 4) Forzar política float32 (sin mixed precision)
+
 
 model = tf.keras.models.load_model("modelo_mobilenetv2.keras")
 print("Modelo cargado correctamente.")
 
-# Si entrenaste con mixed precision, asegurate de convertir entradas a float32
+
 policy = tf.keras.mixed_precision.global_policy()
 print(f"Política activa: {policy.name}")
 
@@ -21,18 +21,17 @@ print(f"Política activa: {policy.name}")
 
 app = FastAPI(title="Keras Inference API (.keras)")
 
-# 1) Carga el modelo .keras
-MODEL_PATH = "modelo_mobilenetv2.keras"
-model = tf.keras.models.load_model(MODEL_PATH)  # soporta Functional/Sequential/subclassed si guardaste como .keras
 
-# 2) Intenta deducir tamaño de entrada
-#    Soportamos entradas [B,H,W,C] float32 típicas
-input_shape = model.inputs[0].shape  # TensorShape(None, H, W, C)
+MODEL_PATH = "modelo_mobilenetv2.keras"
+model = tf.keras.models.load_model(MODEL_PATH)  
+
+
+input_shape = model.inputs[0].shape  
 H = int(input_shape[1])
 W = int(input_shape[2])
 C = int(input_shape[3]) if len(input_shape) >= 4 else 3
 
-# 3) Carga labels (opcional). Si no hay, generamos nombres genéricos
+
 try:
     with open("labels.txt", "r", encoding="utf-8") as f:
         LABELS = [ln.strip() for ln in f if ln.strip()]
@@ -56,10 +55,10 @@ def preprocess_image(img: Image.Image, norm: str = "mobilenet"):
     elif norm == "imagenet":
         x = tf.keras.applications.mobilenet_v2.preprocess_input(x)
     else:
-        # sin normalización extra
+        
         pass
 
-    x = np.expand_dims(x, axis=0)  # [1,H,W,3]
+    x = np.expand_dims(x, axis=0)  
     return x
 
 def postprocess_logits(logits: np.ndarray, topk: int = 5):
@@ -69,9 +68,9 @@ def postprocess_logits(logits: np.ndarray, topk: int = 5):
       - o predicción ya softmax
     """
     probs = logits.squeeze()
-    # Si tu modelo NO tiene softmax en la última capa, puedes aplicarlo:
+    
     if probs.ndim == 1 and not np.all((probs >= 0) & (probs <= 1)) or abs(np.sum(probs) - 1.0) > 1e-3:
-        # Heurística simple: aplicar softmax
+        
         e = np.exp(probs - np.max(probs))
         probs = e / (e.sum() + 1e-12)
 
@@ -116,8 +115,8 @@ async def predict(
     img = Image.open(io.BytesIO(content))
 
     x = preprocess_image(img, norm=norm.lower())
-    # 4) Inferencia
-    preds = model.predict(x)  # [1, C] normalmente
+    
+    preds = model.predict(x)  
     results = postprocess_logits(np.array(preds), topk=topk)
 
     return JSONResponse({

@@ -14,7 +14,7 @@ print("Modelo cargado correctamente.")
 
 
 policy = tf.keras.mixed_precision.global_policy()
-print(f"Política activa: {policy.name}")
+print(f"Política activ: {policy.name}")
 
 cap = cv2.VideoCapture(0)  
 

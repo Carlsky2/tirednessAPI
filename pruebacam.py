@@ -10,7 +10,7 @@ CLASS_NAMES = ["alert", "Microslept", "yawn"]
 
 print("Cargando modelo...")
 model = tf.keras.models.load_model(MODEL_PATH)
-print("✅ Modelo cargado correctamente.")
+print("Modelo cargado correctamente.")
 
 
 policy = tf.keras.mixed_precision.global_policy()
@@ -19,7 +19,7 @@ print(f"Política activa: {policy.name}")
 cap = cv2.VideoCapture(0)  
 
 if not cap.isOpened():
-    print("❌ No se pudo acceder a la cámara.")
+    print("No se pudo acceder a la cámara.")
     exit()
 
 print("🎥 Presioná 'q' para salir.")
@@ -27,7 +27,7 @@ print("🎥 Presioná 'q' para salir.")
 while True:
     ret, frame = cap.read()
     if not ret:
-        print("❌ Error leyendo la cámara.")
+        print("Error leyendo la cámara.")
         break
 
     

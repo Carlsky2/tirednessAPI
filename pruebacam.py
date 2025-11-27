@@ -22,7 +22,7 @@ if not cap.isOpened():
     print("No se pudo acceder a la cámara.")
     exit()
 
-print("🎥 Presioná 'q' para salir.")
+print("Presioná q para salir.")
 
 while True:
     ret, frame = cap.read()
